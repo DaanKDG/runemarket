@@ -16,6 +16,7 @@ class CreateQuestsTable extends Migration
         Schema::create('quests', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('quest_id');
             $table->integer('price')->nullable();
             $table->timestamps();
         });
