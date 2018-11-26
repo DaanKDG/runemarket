@@ -39,7 +39,7 @@ class getQuests extends Command
      */
     public function handle()
     {
-        $quests = $this->getQeusts();
+        $quests = $this->getQuests();
         $string = 'guide';
         collect($quests['query']['embeddedin'])
             ->each(function($quest, $key) use($string) {
@@ -55,7 +55,7 @@ class getQuests extends Command
             });
     }
 
-    public function getQeusts() 
+    public function getQuests() 
     {
         $client = new Client();
         $uri = 'https://oldschool.runescape.wiki/api.php?action=query&list=embeddedin&eititle=Template:Quest_details&eilimit=max&format=json';
