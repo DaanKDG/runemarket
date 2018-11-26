@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'PageController@index')->name('index');
+Route::get('/services/quests', 'PageController@questList')->name('quest.index');
+Route::get('/admin', 'AdminController@index')->name('admin.index')->middleware('is_admin');
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');

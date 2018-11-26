@@ -179,7 +179,7 @@ a.nav-link, a.button-dropdown {
 }
 .center {
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);

@@ -11,7 +11,7 @@
     <div class="center">
         <h1>best <span style="color:#6BBF59;">price</span>  and <span style="color: #6BBF59;">quality</span> for any OSRS services</h1>
         <div class="buttons">
-            <a class="button mr-2 ">SERVICES</a>
+            <a class="button mr-2">SERVICES</a>
             <a class="button ml-5">ACCOUNTS</a>
             
             </div>
