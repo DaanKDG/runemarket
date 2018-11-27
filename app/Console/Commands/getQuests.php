@@ -42,7 +42,7 @@ class getQuests extends Command
         $quests = $this->getQuests();
         $string = 'guide';
         collect($quests['query']['embeddedin'])
-            ->each(function($quest, $key) use($string) {
+            ->each(function($quest, $key) use($string) {    
 
                 if (strpos($quest['title'], $string) == false) 
                 {
