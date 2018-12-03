@@ -7,7 +7,11 @@
 
 require('./bootstrap');
 
+
+
 window.Vue = require('vue');
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -17,7 +21,9 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('admin-quests', require('./components/AdminQuests.vue'));
+Vue.component('quests', require('./components/Quests.vue'));
+//  Vue.component('navigation', require('./components/.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))

@@ -10,16 +10,17 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const ADMIN_TYPE   = 'admin';
+    const ADMIN_TYPE = 'admin';
     const DEFAULT_TYPE = 'default';
-    
+
     protected $fillable = [
-        'name', 'email', 'password','type'
+        'name', 'email', 'password', 'type'
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
+
 
     public function isAdmin()
     {
