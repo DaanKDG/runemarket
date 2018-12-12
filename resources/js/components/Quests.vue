@@ -25,6 +25,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col" style='color: #09814A;'>Price</th>
+                        <th scope="col">Actions</th>
             
                     </tr>
                     </thead>
@@ -33,13 +34,33 @@
                         <th scope="row">{{quest.id}}</th>
                         <td style='font-weight: bold;'>{{quest.name}}</td>
                         <td style='color: #09814A; font-weight: bold;'>{{quest.price ? quest.price + 'M' : 'no price set'}}</td>
-                        
+                        <td><a @click="addQuest(quest)" href="#" class=" btn btn-outline-dark"> Add</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col-md-4">
-                <h2 style='font-weight: bold;'> QUESTING ORDER</h2>
+                <div class="card mb-3" v-if="this.order.length">
+                    <div class="card-header">
+                        <h4 style='font-weight: bold; margin: 0;'>ORDER DETAILS </h4>
+                    </div>
+                    <div class="card-body">
+                 <!-- <p style='margin:0;'> {{ this.order.length ? '': 'Start making an order by selecting quests'}}</p>        -->
+                <ul class="list-group list-group-flush" v-for="quest in order" v-bind:key="quest.id">
+                    <li class="list-group-item" style="padding-left: 0;">{{quest.name}} <i @click="removeQuest(quest)"  class="fas fa-trash ml-1"></i> <span style='color: #09814A; font-weight: bold;' class="float-right"> {{quest.price ? quest.price : 0}}M </span> </li>
+                    <!-- <a @click="removeQuest(quest)" class="btn btn-outline-dark"> Remove</a> -->
+                    
+                </ul>
+                <div class="total-price mt-3">
+                <p class="float-right" style="font-weight: bold; margin: 0;"> 
+                    <!-- border: 1px solid black; border-radius: 7px; padding: 5px; -->
+                    <span class="mr-1"> {{this.orderPrice ? 'TOTAL PRICE : '  : '' }} </span> 
+                    <span style='color: #09814a; padding-right: 1.25rem;'> {{this.orderPrice ? this.orderPrice + 'M' : ''}}</span>
+                    </p>
+                </div>
+                    </div>
+                </div>
+                <a class="btn btn-outline-dark float-right" v-if="this.order.length" style="display:block; font-weight: bold;">PLACE ORDER</a>
             </div>
 
         </div>
@@ -57,6 +78,8 @@ export default {
                 name: '',
                 price: '',   
             }, 
+            order: [],
+            orderPrice: null,
             quest_id: '',
             pagination: {},
             edit: false,
@@ -87,10 +110,31 @@ export default {
             })
             .then(res => res.json())
             .then(res => {
+                this.matches = 0;
                 this.quests = res.data;
                 vm.makePagination(res.meta, res.links);
             })
             .catch(error => console.log(error));
+        },
+        addQuest(quest) {
+            var a = this.order;
+            var b = quest;
+            a = JSON.stringify(a);
+            b = JSON.stringify(b);
+            // do more research into recursively
+            var c = a.indexOf(b);
+            if(c == -1){
+                this.order.push({...quest});
+            if(quest.price) {
+              this.orderPrice += quest.price;
+            }
+            } else {console.log('element already selected');}
+        },
+        removeQuest(quest) {
+            this.order.splice(quest,1);
+            if(quest.price) {
+                this.orderPrice -= quest.price;
+            }
         },
         makePagination(meta,links) {
             let pagination = {
@@ -126,7 +170,7 @@ export default {
             this.quest.price = quest.price;
         },
         fetchSearch() {
-            if (this.keywords) {
+            if(this.keywords) {
                 axios.get('/api/quests/search', { params: { keywords: this.keywords}}, {
                         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}
                     })

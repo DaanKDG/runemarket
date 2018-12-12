@@ -14033,9 +14033,8 @@ module.exports = __webpack_require__(46);
 
 /***/ }),
 /* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -14052,8 +14051,8 @@ window.Vue = __webpack_require__(37);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component('admin-quests', __webpack_require__(53));
-Vue.component('quests', __webpack_require__(40)); //  Vue.component('navigation', require('./components/.vue'));
+Vue.component('admin-quests', __webpack_require__(40));
+Vue.component('quests', __webpack_require__(43)); //  Vue.component('navigation', require('./components/.vue'));
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
@@ -47356,433 +47355,6 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/Quests.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-c4393d08", Component.options)
-  } else {
-    hotAPI.reload("data-v-c4393d08", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 41 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      quests: [],
-      quest: {
-        id: '',
-        name: '',
-        price: ''
-      },
-      quest_id: '',
-      pagination: {},
-      edit: false,
-      search: false,
-      current_page_url: '/api/quests',
-      keywords: null,
-      matches: 0
-    };
-  },
-  created: function created() {
-    this.fetchQuests();
-  },
-  watch: {
-    keywords: function keywords(after, before) {
-      this.fetchSearch();
-    }
-  },
-  methods: {
-    fetchQuests: function fetchQuests(page_url) {
-      var _this = this;
-
-      var vm = this;
-      page_url = page_url || this.current_page_url;
-      this.current_page_url = page_url;
-      fetch(page_url, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }).then(function (res) {
-        return res.json();
-      }).then(function (res) {
-        _this.quests = res.data;
-        vm.makePagination(res.meta, res.links);
-      }).catch(function (error) {
-        return console.log(error);
-      });
-    },
-    makePagination: function makePagination(meta, links) {
-      var pagination = {
-        current_page: meta.current_page,
-        last_page: meta.last_page,
-        next_page_url: links.next,
-        prev_page_url: links.prev
-      };
-      this.pagination = pagination;
-    },
-    updateQuest: function updateQuest() {
-      var _this2 = this;
-
-      if (this.edit) {
-        fetch("/api/quests/".concat(this.quest.id), {
-          method: 'put',
-          body: JSON.stringify(this.quest),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        }).then(function (res) {
-          if (_this2.keywords) {
-            _this2.fetchSearch();
-          } else {
-            _this2.fetchQuests();
-          }
-        }).catch(function (error) {
-          return console.log(error);
-        });
-      }
-    },
-    editQuest: function editQuest(quest) {
-      this.edit = true;
-      this.quest.id = quest.id;
-      this.quest.quest_id = quest.id;
-      this.quest.name = quest.name;
-      this.quest.price = quest.price;
-    },
-    fetchSearch: function fetchSearch() {
-      var _this3 = this;
-
-      if (this.keywords) {
-        axios.get('/api/quests/search', {
-          params: {
-            keywords: this.keywords
-          }
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        }).then(function (res) {
-          _this3.quests = res.data.data;
-          _this3.matches = _this3.quests.length;
-          console.log(_this3.matches);
-        }).catch(function (error) {
-          return console.log(error);
-        });
-      } else {
-        this.matches = 0;
-        this.fetchQuests();
-      }
-    }
-  }
-});
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("form", { staticClass: "form-inline mb-3" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.keywords,
-                  expression: "keywords"
-                }
-              ],
-              staticClass: "form-control mr-sm-2",
-              staticStyle: { width: "80%" },
-              attrs: {
-                type: "search",
-                placeholder: "Search",
-                "aria-label": "Search"
-              },
-              domProps: { value: _vm.keywords },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.keywords = $event.target.value
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
-            _c("ul", { staticClass: "pagination" }, [
-              _c(
-                "li",
-                {
-                  staticClass: "page-item",
-                  class: [{ disabled: !_vm.pagination.prev_page_url }]
-                },
-                [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "page-link",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          _vm.fetchQuests(_vm.pagination.prev_page_url)
-                        }
-                      }
-                    },
-                    [_vm._v("Previous")]
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("li", { staticClass: "page-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "page-link disabled text-dark",
-                    attrs: { href: "#" }
-                  },
-                  [
-                    _vm._v(
-                      "Page " +
-                        _vm._s(_vm.pagination.current_page) +
-                        " of " +
-                        _vm._s(_vm.pagination.last_page)
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "li",
-                {
-                  staticClass: "page-item",
-                  class: [{ disabled: !_vm.pagination.next_page_url }]
-                },
-                [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "page-link",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          _vm.fetchQuests(_vm.pagination.next_page_url)
-                        }
-                      }
-                    },
-                    [_vm._v("Next")]
-                  )
-                ]
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              " " + _vm._s(this.matches ? this.matches + " results found " : "")
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "table",
-            { staticClass: "table", staticStyle: { width: "80% !important" } },
-            [
-              _vm._m(0),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.quests, function(quest) {
-                  return _c("tr", { key: quest.id }, [
-                    _c("th", { attrs: { scope: "row" } }, [
-                      _vm._v(_vm._s(quest.id))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticStyle: { "font-weight": "bold" } }, [
-                      _vm._v(_vm._s(quest.name))
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticStyle: { color: "#09814A", "font-weight": "bold" }
-                      },
-                      [
-                        _vm._v(
-                          _vm._s(
-                            quest.price ? quest.price + "M" : "no price set"
-                          )
-                        )
-                      ]
-                    )
-                  ])
-                })
-              )
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _vm._m(1)
-      ])
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
-        _vm._v(" "),
-        _c(
-          "th",
-          { staticStyle: { color: "#09814A" }, attrs: { scope: "col" } },
-          [_vm._v("Price")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
-      _c("h2", { staticStyle: { "font-weight": "bold" } }, [
-        _vm._v(" QUESTING ORDER")
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-c4393d08", module.exports)
-  }
-}
-
-/***/ }),
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(11)
-/* script */
-var __vue_script__ = __webpack_require__(54)
-/* template */
-var __vue_template__ = __webpack_require__(55)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
 Component.options.__file = "resources/js/components/AdminQuests.vue"
 
 /* hot reload */
@@ -47805,11 +47377,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 54 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -48000,7 +47579,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 55 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -48010,7 +47589,7 @@ var render = function() {
   return _c("div", [
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-7" }, [
+        _c("div", { staticClass: "col-md-7 mb-5" }, [
           _c("form", { staticClass: "form-inline mb-3" }, [
             _c("input", {
               directives: [
@@ -48114,42 +47693,59 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("table", { staticClass: "table" }, [
-            _vm._m(0),
-            _vm._v(" "),
+          _c("div", { staticClass: "card" }, [
             _c(
-              "tbody",
-              _vm._l(_vm.quests, function(quest) {
-                return _c("tr", { key: quest.id }, [
-                  _c("th", { attrs: { scope: "row" } }, [
-                    _vm._v(_vm._s(quest.id))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(quest.name))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _vm._v(
-                      _vm._s(quest.price ? quest.price + "M" : "no price set")
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [
+              "div",
+              { staticClass: "card-body", staticStyle: { padding: "0" } },
+              [
+                _c(
+                  "table",
+                  {
+                    staticClass: "table",
+                    staticStyle: { "margin-bottom": "0" }
+                  },
+                  [
+                    _vm._m(0),
+                    _vm._v(" "),
                     _c(
-                      "a",
-                      {
-                        staticClass: " btn btn-outline-dark",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            _vm.editQuest(quest)
-                          }
-                        }
-                      },
-                      [_vm._v(" Edit")]
+                      "tbody",
+                      _vm._l(_vm.quests, function(quest) {
+                        return _c("tr", { key: quest.id }, [
+                          _c("th", { attrs: { scope: "row" } }, [
+                            _vm._v(_vm._s(quest.id))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(quest.name))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              _vm._s(
+                                quest.price ? quest.price + "M" : "no price set"
+                              )
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "a",
+                              {
+                                staticClass: " btn btn-outline-dark",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.editQuest(quest)
+                                  }
+                                }
+                              },
+                              [_vm._v(" Edit")]
+                            )
+                          ])
+                        ])
+                      })
                     )
-                  ])
-                ])
-              })
+                  ]
+                )
+              ]
             )
           ])
         ]),
@@ -48314,6 +47910,606 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-7b81f6e5", module.exports)
   }
 }
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(11)
+/* script */
+var __vue_script__ = __webpack_require__(44)
+/* template */
+var __vue_template__ = __webpack_require__(45)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Quests.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c4393d08", Component.options)
+  } else {
+    hotAPI.reload("data-v-c4393d08", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      quests: [],
+      quest: {
+        id: '',
+        name: '',
+        price: ''
+      },
+      order: [],
+      orderPrice: null,
+      quest_id: '',
+      pagination: {},
+      edit: false,
+      search: false,
+      current_page_url: '/api/quests',
+      keywords: null,
+      matches: 0
+    };
+  },
+  created: function created() {
+    this.fetchQuests();
+  },
+  watch: {
+    keywords: function keywords(after, before) {
+      this.fetchSearch();
+    }
+  },
+  methods: {
+    fetchQuests: function fetchQuests(page_url) {
+      var _this = this;
+
+      var vm = this;
+      page_url = page_url || this.current_page_url;
+      this.current_page_url = page_url;
+      fetch(page_url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }).then(function (res) {
+        return res.json();
+      }).then(function (res) {
+        _this.matches = 0;
+        _this.quests = res.data;
+        vm.makePagination(res.meta, res.links);
+      }).catch(function (error) {
+        return console.log(error);
+      });
+    },
+    addQuest: function addQuest(quest) {
+      var a = this.order;
+      var b = quest;
+      a = JSON.stringify(a);
+      b = JSON.stringify(b); // do more research into recursively
+
+      var c = a.indexOf(b);
+
+      if (c == -1) {
+        this.order.push(_objectSpread({}, quest));
+
+        if (quest.price) {
+          this.orderPrice += quest.price;
+        }
+      } else {
+        console.log('element already selected');
+      }
+    },
+    removeQuest: function removeQuest(quest) {
+      this.order.splice(quest, 1);
+
+      if (quest.price) {
+        this.orderPrice -= quest.price;
+      }
+    },
+    makePagination: function makePagination(meta, links) {
+      var pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev
+      };
+      this.pagination = pagination;
+    },
+    updateQuest: function updateQuest() {
+      var _this2 = this;
+
+      if (this.edit) {
+        fetch("/api/quests/".concat(this.quest.id), {
+          method: 'put',
+          body: JSON.stringify(this.quest),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          if (_this2.keywords) {
+            _this2.fetchSearch();
+          } else {
+            _this2.fetchQuests();
+          }
+        }).catch(function (error) {
+          return console.log(error);
+        });
+      }
+    },
+    editQuest: function editQuest(quest) {
+      this.edit = true;
+      this.quest.id = quest.id;
+      this.quest.quest_id = quest.id;
+      this.quest.name = quest.name;
+      this.quest.price = quest.price;
+    },
+    fetchSearch: function fetchSearch() {
+      var _this3 = this;
+
+      if (this.keywords) {
+        axios.get('/api/quests/search', {
+          params: {
+            keywords: this.keywords
+          }
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          _this3.quests = res.data.data;
+          _this3.matches = _this3.quests.length;
+          console.log(_this3.matches);
+        }).catch(function (error) {
+          return console.log(error);
+        });
+      } else {
+        this.matches = 0;
+        this.fetchQuests();
+      }
+    }
+  }
+});
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-8" }, [
+          _c("form", { staticClass: "form-inline mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.keywords,
+                  expression: "keywords"
+                }
+              ],
+              staticClass: "form-control mr-sm-2",
+              staticStyle: { width: "80%" },
+              attrs: {
+                type: "search",
+                placeholder: "Search",
+                "aria-label": "Search"
+              },
+              domProps: { value: _vm.keywords },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.keywords = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+            _c("ul", { staticClass: "pagination" }, [
+              _c(
+                "li",
+                {
+                  staticClass: "page-item",
+                  class: [{ disabled: !_vm.pagination.prev_page_url }]
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.fetchQuests(_vm.pagination.prev_page_url)
+                        }
+                      }
+                    },
+                    [_vm._v("Previous")]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("li", { staticClass: "page-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "page-link disabled text-dark",
+                    attrs: { href: "#" }
+                  },
+                  [
+                    _vm._v(
+                      "Page " +
+                        _vm._s(_vm.pagination.current_page) +
+                        " of " +
+                        _vm._s(_vm.pagination.last_page)
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "li",
+                {
+                  staticClass: "page-item",
+                  class: [{ disabled: !_vm.pagination.next_page_url }]
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.fetchQuests(_vm.pagination.next_page_url)
+                        }
+                      }
+                    },
+                    [_vm._v("Next")]
+                  )
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              " " + _vm._s(this.matches ? this.matches + " results found " : "")
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "table",
+            { staticClass: "table", staticStyle: { width: "80% !important" } },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.quests, function(quest) {
+                  return _c("tr", { key: quest.id }, [
+                    _c("th", { attrs: { scope: "row" } }, [
+                      _vm._v(_vm._s(quest.id))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticStyle: { "font-weight": "bold" } }, [
+                      _vm._v(_vm._s(quest.name))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        staticStyle: { color: "#09814A", "font-weight": "bold" }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(
+                            quest.price ? quest.price + "M" : "no price set"
+                          )
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: " btn btn-outline-dark",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              _vm.addQuest(quest)
+                            }
+                          }
+                        },
+                        [_vm._v(" Add")]
+                      )
+                    ])
+                  ])
+                })
+              )
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
+          this.order.length
+            ? _c("div", { staticClass: "card mb-3" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "card-body" },
+                  [
+                    _vm._l(_vm.order, function(quest) {
+                      return _c(
+                        "ul",
+                        {
+                          key: quest.id,
+                          staticClass: "list-group list-group-flush"
+                        },
+                        [
+                          _c(
+                            "li",
+                            {
+                              staticClass: "list-group-item",
+                              staticStyle: { "padding-left": "0" }
+                            },
+                            [
+                              _vm._v(_vm._s(quest.name) + " "),
+                              _c("i", {
+                                staticClass: "fas fa-trash ml-1",
+                                on: {
+                                  click: function($event) {
+                                    _vm.removeQuest(quest)
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  staticClass: "float-right",
+                                  staticStyle: {
+                                    color: "#09814A",
+                                    "font-weight": "bold"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(quest.price ? quest.price : 0) +
+                                      "M "
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "total-price mt-3" }, [
+                      _c(
+                        "p",
+                        {
+                          staticClass: "float-right",
+                          staticStyle: { "font-weight": "bold", margin: "0" }
+                        },
+                        [
+                          _c("span", { staticClass: "mr-1" }, [
+                            _vm._v(
+                              " " +
+                                _vm._s(
+                                  this.orderPrice ? "TOTAL PRICE : " : ""
+                                ) +
+                                " "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticStyle: {
+                                color: "#09814a",
+                                "padding-right": "1.25rem"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    this.orderPrice ? this.orderPrice + "M" : ""
+                                  )
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          this.order.length
+            ? _c(
+                "a",
+                {
+                  staticClass: "btn btn-outline-dark float-right",
+                  staticStyle: { display: "block", "font-weight": "bold" }
+                },
+                [_vm._v("PLACE ORDER")]
+              )
+            : _vm._e()
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
+        _vm._v(" "),
+        _c(
+          "th",
+          { staticStyle: { color: "#09814A" }, attrs: { scope: "col" } },
+          [_vm._v("Price")]
+        ),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", { staticStyle: { "font-weight": "bold", margin: "0" } }, [
+        _vm._v("ORDER DETAILS ")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c4393d08", module.exports)
+  }
+}
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

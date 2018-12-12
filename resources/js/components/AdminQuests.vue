@@ -2,7 +2,7 @@
 <div>
     <div class="container">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-7 mb-5">
                 <form class="form-inline mb-3">
                     <input class="form-control mr-sm-2" v-model="keywords" style='width:80%;' type="search" placeholder="Search"
                            aria-label="Search">
@@ -18,7 +18,11 @@
                     </ul>
                 </nav>
                <p> {{this.matches ? this.matches + ' results found ' : ''}}</p>
-                <table class="table">
+               <div class="card">
+
+  <div class="card-body" style='padding: 0;'>
+
+<table class="table" style="margin-bottom: 0;">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -36,6 +40,9 @@
                         </tr>
                     </tbody>
                 </table>
+  </div>
+</div>
+                
             </div>
             <div class="col-md-4">
                 <h2 class="text-center" style="font-weight: 500;">EDIT PANEL</h2>
