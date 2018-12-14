@@ -48293,7 +48293,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "table",
-            { staticClass: "table", staticStyle: { width: "80% !important" } },
+            { staticClass: "table", staticStyle: { width: "90% !important" } },
             [
               _vm._m(0),
               _vm._v(" "),

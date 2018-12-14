@@ -18,7 +18,7 @@
                     </ul>
                 </nav>
                <p> {{this.matches ? this.matches + ' results found ' : ''}}</p>
-                <table class="table" style='width: 80% !important;'>
+                <table class="table" style='width: 90% !important;'>
                     <thead>
                     <tr>
                         <th scope="col">#</th>
