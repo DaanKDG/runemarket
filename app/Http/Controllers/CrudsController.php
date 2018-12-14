@@ -21,11 +21,10 @@ class CrudsController extends Controller
         {
             return new QuestResource($quest);
         }
-
     }
     public function search(Request $request)
     {
-        $quests = Quest::where('name', 'like', '%' . $request->keywords . '%' )->get();
+        $quests = Quest::where('name', 'like', $request->keywords . '%' )->get();
         return QuestResource::collection($quests);
     }
 }

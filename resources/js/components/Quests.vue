@@ -1,9 +1,8 @@
-
 <template>
 <div>
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <form class="form-inline mb-3">
                     <input class="form-control mr-sm-2" v-model="keywords" style='width:80%;' type="search" placeholder="Search"
                            aria-label="Search">
@@ -26,7 +25,6 @@
                         <th scope="col">Name</th>
                         <th scope="col" style='color: #09814A;'>Price</th>
                         <th scope="col">Actions</th>
-            
                     </tr>
                     </thead>
                     <tbody>
@@ -46,7 +44,7 @@
                     </div>
                     <div class="card-body">
                  <!-- <p style='margin:0;'> {{ this.order.length ? '': 'Start making an order by selecting quests'}}</p>        -->
-                <ul class="list-group list-group-flush" v-for="quest in order" v-bind:key="quest.id">
+                    <ul class="list-group list-group-flush" v-for="quest in order" v-bind:key="quest.id">
                     <li class="list-group-item" style="padding-left: 0;">{{quest.name}} <i @click="removeQuest(quest)"  class="fas fa-trash ml-1"></i> <span style='color: #09814A; font-weight: bold;' class="float-right"> {{quest.price ? quest.price : 0}}M </span> </li>
                     <!-- <a @click="removeQuest(quest)" class="btn btn-outline-dark"> Remove</a> -->
                     
@@ -62,7 +60,6 @@
                 </div>
                 <a class="btn btn-outline-dark float-right" v-if="this.order.length" style="display:block; font-weight: bold;">PLACE ORDER</a>
             </div>
-
         </div>
     </div>
 </div>
@@ -89,7 +86,7 @@ export default {
             matches: 0,
         }
     },
-    created() {
+    mounted() {
         this.fetchQuests();
     },
     watch: {
@@ -125,13 +122,13 @@ export default {
             var c = a.indexOf(b);
             if(c == -1){
                 this.order.push({...quest});
-            if(quest.price) {
-              this.orderPrice += quest.price;
-            }
+                if(quest.price) {
+                    this.orderPrice += quest.price;
+                }
             } else {console.log('element already selected');}
         },
         removeQuest(quest) {
-            this.order.splice(quest,1);
+            this.order.splice(this.order.indexOf(quest),1);
             if(quest.price) {
                 this.orderPrice -= quest.price;
             }

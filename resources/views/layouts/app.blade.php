@@ -239,6 +239,10 @@ a.button:hover, a.featured-btn:hover {
     width: 100%;
     height: 100vh;
 }
+.quest-image {
+
+ background-color: #EBF5EE;
+}
 .icon-grid {
     background-color: #EBF5EE;
 }
@@ -266,11 +270,13 @@ a.button:hover, a.featured-btn:hover {
 .full-height {
     height: 100vh;
 }
-
+ .icon-grid p {
+    font-weight: bold;
+}
 a.nav-link {
-color: white;
-border-radius: 5px;
-background-color: ;
+    color: white;
+    border-radius: 5px;
+    background-color: ;
     font-weight: bold;
     font-size: 1.1em;
     text-decoration: none;

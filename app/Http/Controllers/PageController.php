@@ -12,8 +12,16 @@ class PageController extends Controller
         return view('layouts.index');
     }
     public function questList()
-     {
+    {
         $quests = Quest::all();
         return view('layouts.quests', compact('quests'));
+    }
+    public function minigames()
+    {
+        return view('layouts.minigames');
+    }
+    public function accounts()
+    {
+        return view('layouts.accounts');
     }
 }       

@@ -48035,9 +48035,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -48058,7 +48055,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       matches: 0
     };
   },
-  created: function created() {
+  mounted: function mounted() {
     this.fetchQuests();
   },
   watch: {
@@ -48107,7 +48104,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     removeQuest: function removeQuest(quest) {
-      this.order.splice(quest, 1);
+      this.order.splice(this.order.indexOf(quest), 1);
 
       if (quest.price) {
         this.orderPrice -= quest.price;
@@ -48190,7 +48187,7 @@ var render = function() {
   return _c("div", [
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "col-md-7" }, [
           _c("form", { staticClass: "form-inline mb-3" }, [
             _c("input", {
               directives: [

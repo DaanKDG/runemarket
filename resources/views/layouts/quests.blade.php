@@ -7,7 +7,7 @@
             @include('layouts.nav')
         </div>
     </div>
-    <div class="jumbotron text-center" style='margin-top: 67px; height: 20vh;'>
+    <div class="jumbotron text-center quest-image" style='margin-top: 67px; height: 20vh;'>
         <h2 style='font-weight: bold;'>QUEST SERVICES</h2>
     </div>
     <quests> </quests>

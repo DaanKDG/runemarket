@@ -19,7 +19,7 @@
         <ul class="navbar-nav ml-auto">
 
             <li class="nav-item ml-3">
-                <a class="nav-link" href="{{ route('login') }}">ACCOUNTS</a>
+                <a class="nav-link" href="{{ route('accounts.index') }}">ACCOUNTS</a>
             </li>
             <li class="nav-item ml-3 button-dropdown">
 
@@ -29,7 +29,7 @@
                 <ul class="dropdown">
                     <li><a href="#" class="dropdown-link">Skilling</a></li>
                     <li><a href="{{ route('quest.index')}}" class="dropdown-link">Questing</a></li>
-                    <li><a href="#" class="dropdown-link">Minigames</a></li>
+                    <li><a href="{{ route('minigames.index')}}" class="dropdown-link">Minigames</a></li>
                 </ul>
 
             </li>
