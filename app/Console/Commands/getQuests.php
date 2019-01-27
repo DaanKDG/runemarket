@@ -10,8 +10,7 @@ class getQuests extends Command
 {
 
     protected $signature = 'get:quests';
-
-
+    
     protected $description = 'get all current quests';
 
     public function __construct()

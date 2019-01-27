@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Quest;
+use App\Account;
 use App\Http\Resources\Quest as QuestResource;
+use App\Http\Resources\AccountOverview as AccountResource;
+use App\Http\Resources\Account as specificAccount;
 
 class CrudsController extends Controller
 {
@@ -26,5 +29,14 @@ class CrudsController extends Controller
     {
         $quests = Quest::where('name', 'like', $request->keywords . '%' )->get();
         return QuestResource::collection($quests);
+    }
+    public function getAccounts(Request $request)
+    {
+        $accounts = Account::all();
+        return AccountResource::collection($accounts);
+    }
+    public function getAccount(Account $account)
+    {
+        return specificAccount::collection($account);
     }
 }

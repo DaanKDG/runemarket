@@ -12,8 +12,8 @@
             <h1>best <span style="color:#6BBF59;">price</span> and <span style="color: #6BBF59;">quality</span> for any
                 OSRS services</h1>
             <div class="buttons">
-            <a class="button mr-2">SERVICES</a>
-                <a class="button ml-5">ACCOUNTS</a>
+            <a  href="{{ Route('minigames.index') }}" class="button mr-2">SERVICES</a>
+            <a href="{{ Route('accounts.index') }}" class="button ml-5">ACCOUNTS</a>
 
             </div>
         </div>
@@ -45,7 +45,9 @@
     </div>
     <div class="container mt-5 mb-5" style=''>
         <h2 class="pb-5" style="font-weight: bold; text-align:center;">FEATURED OFFERS</h2>
-        <div class="row" style="text-align:center;">
+
+        <p class="text-center">Under maintenance</p>
+        {{-- <div class="row" style="text-align:center;">
             <div class="col-lg-4">
                 <div class="card" style=" text-align: center;">
                     <img class="card-img-top" style='height: 150px;' src="{{ asset('images/osrs_acc.jpg') }}"
@@ -83,7 +85,7 @@
                         <a href="#" class="featured-btn">DETAILS</a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
         </div>
@@ -165,13 +167,13 @@
                     <h6 class="text-uppercase font-weight-bold">Contact</h6>
                     <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
                     <p>
-                        <i class="fa fa-home mr-3"></i> New York, NY 10012, US</p>
+                        <i class="fa fa-home mr-3"></i> Runemarket</p>
                     <p>
-                        <i class="fa fa-envelope mr-3"></i> info@example.com</p>
+                        <i class="fa fa-envelope mr-3"></i> info@runemarket.net</p>
                     <p>
-                        <i class="fa fa-phone mr-3"></i> + 01 234 567 88</p>
+                        <i class="fa fa-phone mr-3"></i> + 00 000 000 00</p>
                     <p>
-                        <i class="fa fa-print mr-3"></i> + 01 234 567 89</p>
+                        <i class="fa fa-print mr-3"></i> + 00 000 000 00</p>
 
                 </div>
                 <!-- Grid column -->
@@ -184,7 +186,7 @@
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">© 2018 Copyright:
-            <a href="https://mdbootstrap.com/education/bootstrap/"> Runemarket.net</a>
+            <a href="#"> Runemarket.net</a>
         </div>
         <!-- Copyright -->
 

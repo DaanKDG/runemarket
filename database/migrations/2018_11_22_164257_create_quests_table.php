@@ -17,7 +17,7 @@ class CreateQuestsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('quest_id');
-            $table->integer('price')->nullable();
+            $table->float('price')->nullable();
             $table->timestamps();
         });
     }

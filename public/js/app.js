@@ -70,7 +70,7 @@
 "use strict";
 
 
-var bind = __webpack_require__(5);
+var bind = __webpack_require__(6);
 var isBuffer = __webpack_require__(20);
 
 /*global toString:true*/
@@ -402,6 +402,115 @@ module.exports = g;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -424,10 +533,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(7);
+    adapter = __webpack_require__(8);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(7);
+    adapter = __webpack_require__(8);
   }
   return adapter;
 }
@@ -502,10 +611,10 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3086,7 +3195,7 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -13457,7 +13566,7 @@ return jQuery;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13475,7 +13584,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -13665,7 +13774,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13676,7 +13785,7 @@ var settle = __webpack_require__(23);
 var buildURL = __webpack_require__(25);
 var parseHeaders = __webpack_require__(26);
 var isURLSameOrigin = __webpack_require__(27);
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(28);
 
 module.exports = function xhrAdapter(config) {
@@ -13852,7 +13961,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13877,7 +13986,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13889,7 +13998,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13915,120 +14024,11 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(46);
+module.exports = __webpack_require__(52);
 
 
 /***/ }),
@@ -14043,25 +14043,10 @@ module.exports = __webpack_require__(46);
 __webpack_require__(14);
 
 window.Vue = __webpack_require__(37);
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
 Vue.component('admin-quests', __webpack_require__(40));
-Vue.component('quests', __webpack_require__(43)); //  Vue.component('navigation', require('./components/.vue'));
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
+Vue.component('quests', __webpack_require__(43));
+Vue.component('Accounts', __webpack_require__(46));
+Vue.component('accountdetails', __webpack_require__(49));
 var app = new Vue({
   el: '#app'
 });
@@ -14078,8 +14063,8 @@ window._ = __webpack_require__(15);
  */
 
 try {
-  window.Popper = __webpack_require__(3).default;
-  window.$ = window.jQuery = __webpack_require__(4);
+  window.Popper = __webpack_require__(4).default;
+  window.$ = window.jQuery = __webpack_require__(5);
 
   __webpack_require__(17);
 } catch (e) {}
@@ -31272,7 +31257,7 @@ module.exports = function(module) {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(4), __webpack_require__(3)) :
+   true ? factory(exports, __webpack_require__(5), __webpack_require__(4)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -35226,9 +35211,9 @@ module.exports = __webpack_require__(19);
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(5);
+var bind = __webpack_require__(6);
 var Axios = __webpack_require__(21);
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 
 /**
  * Create an instance of Axios
@@ -35261,9 +35246,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(10);
+axios.Cancel = __webpack_require__(11);
 axios.CancelToken = __webpack_require__(35);
-axios.isCancel = __webpack_require__(9);
+axios.isCancel = __webpack_require__(10);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -35311,7 +35296,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(30);
 var dispatchRequest = __webpack_require__(31);
@@ -35416,7 +35401,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -35849,8 +35834,8 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(32);
-var isCancel = __webpack_require__(9);
-var defaults = __webpack_require__(2);
+var isCancel = __webpack_require__(10);
+var defaults = __webpack_require__(3);
 var isAbsoluteURL = __webpack_require__(33);
 var combineURLs = __webpack_require__(34);
 
@@ -36009,7 +35994,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(10);
+var Cancel = __webpack_require__(11);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -47327,14 +47312,14 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(7)))
 
 /***/ }),
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(2)
 /* script */
 var __vue_script__ = __webpack_require__(41)
 /* template */
@@ -47462,20 +47447,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       quests: [],
       quest: {
-        id: '',
-        name: '',
-        price: ''
+        id: "",
+        name: "",
+        price: ""
       },
-      quest_id: '',
+      quest_id: "",
       pagination: {},
       edit: false,
       search: false,
-      current_page_url: '/api/quests',
+      current_page_url: "/api/quests",
       keywords: null,
       matches: 0
     };
@@ -47497,8 +47507,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.current_page_url = page_url;
       fetch(page_url, {
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          "Content-Type": "application/json",
+          Accept: "application/json"
         }
       }).then(function (res) {
         return res.json();
@@ -47523,11 +47533,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       if (this.edit) {
         fetch("/api/quests/".concat(this.quest.id), {
-          method: 'put',
+          method: "put",
           body: JSON.stringify(this.quest),
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            "Content-Type": "application/json",
+            Accept: "application/json"
           }
         }).then(function (res) {
           _this2.edit = false;
@@ -47555,14 +47565,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this3 = this;
 
       if (this.keywords) {
-        axios.get('/api/quests/search', {
+        axios.get("/api/quests/search", {
           params: {
             keywords: this.keywords
           }
         }, {
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            "Content-Type": "application/json",
+            Accept: "application/json"
           }
         }).then(function (res) {
           _this3.quests = res.data.data;
@@ -47688,9 +47698,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("p", [
-            _vm._v(
-              " " + _vm._s(this.matches ? this.matches + " results found " : "")
-            )
+            _vm._v(_vm._s(this.matches ? this.matches + " results found " : ""))
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card" }, [
@@ -47729,7 +47737,7 @@ var render = function() {
                             _c(
                               "a",
                               {
-                                staticClass: " btn btn-outline-dark",
+                                staticClass: "btn btn-outline-dark",
                                 attrs: { href: "#" },
                                 on: {
                                   click: function($event) {
@@ -47737,7 +47745,7 @@ var render = function() {
                                   }
                                 }
                               },
-                              [_vm._v(" Edit")]
+                              [_vm._v("Edit")]
                             )
                           ])
                         ])
@@ -47843,7 +47851,7 @@ var render = function() {
                   staticClass: "btn btn-outline-dark float-right",
                   class: [{ disabled: !this.edit }]
                 },
-                [_vm._v(" Update")]
+                [_vm._v("Update")]
               )
             ]
           )
@@ -47882,11 +47890,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group-prepend" }, [
-      _c("div", { staticClass: "input-group-text" }, [
-        _vm._v(
-          "\r\n                                Quest price\r\n                            "
-        )
-      ])
+      _c("div", { staticClass: "input-group-text" }, [_vm._v("Quest price")])
     ])
   },
   function() {
@@ -47894,11 +47898,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group-prepend" }, [
-      _c("div", { staticClass: "input-group-text" }, [
-        _vm._v(
-          "\r\n                                M\r\n                            "
-        )
-      ])
+      _c("div", { staticClass: "input-group-text" }, [_vm._v("M")])
     ])
   }
 ]
@@ -47916,7 +47916,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(2)
 /* script */
 var __vue_script__ = __webpack_require__(44)
 /* template */
@@ -48035,24 +48035,58 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       quests: [],
       quest: {
-        id: '',
-        name: '',
-        price: ''
+        id: "",
+        name: "",
+        price: ""
       },
       order: [],
       orderPrice: null,
-      quest_id: '',
+      quest_id: "",
       pagination: {},
       edit: false,
       search: false,
-      current_page_url: '/api/quests',
+      current_page_url: "/api/quests",
       keywords: null,
-      matches: 0
+      matches: 0,
+      orderMsg: null
     };
   },
   mounted: function mounted() {
@@ -48072,8 +48106,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.current_page_url = page_url;
       fetch(page_url, {
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          "Content-Type": "application/json",
+          Accept: "application/json"
         }
       }).then(function (res) {
         return res.json();
@@ -48089,8 +48123,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var a = this.order;
       var b = quest;
       a = JSON.stringify(a);
-      b = JSON.stringify(b); // do more research into recursively
-
+      b = JSON.stringify(b);
       var c = a.indexOf(b);
 
       if (c == -1) {
@@ -48100,7 +48133,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.orderPrice += quest.price;
         }
       } else {
-        console.log('element already selected');
+        console.log("element already selected");
       }
     },
     removeQuest: function removeQuest(quest) {
@@ -48124,11 +48157,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (this.edit) {
         fetch("/api/quests/".concat(this.quest.id), {
-          method: 'put',
+          method: "put",
           body: JSON.stringify(this.quest),
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            "Content-Type": "application/json",
+            Accept: "application/json"
           }
         }).then(function (res) {
           if (_this2.keywords) {
@@ -48152,14 +48185,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this3 = this;
 
       if (this.keywords) {
-        axios.get('/api/quests/search', {
+        axios.get("/api/quests/search", {
           params: {
             keywords: this.keywords
           }
         }, {
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            "Content-Type": "application/json",
+            Accept: "application/json"
           }
         }).then(function (res) {
           _this3.quests = res.data.data;
@@ -48172,6 +48205,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.matches = 0;
         this.fetchQuests();
       }
+    },
+    sendOrderMsg: function sendOrderMsg() {
+      var _this4 = this;
+
+      this.orderMsg = null;
+      this.order.forEach(function (order) {
+        console.log(order.name);
+
+        if (_this4.orderMsg) {
+          _this4.orderMsg += "," + " " + order.name;
+        } else {
+          _this4.orderMsg = order.name;
+        }
+      });
+      tidioChatApi.messageFromVisitor("Hey, I want to order the following quest(s): " + this.orderMsg + ' ' + 'for a total price:' + ' ' + this.orderPrice + 'M');
     }
   }
 });
@@ -48286,9 +48334,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("p", [
-            _vm._v(
-              " " + _vm._s(this.matches ? this.matches + " results found " : "")
-            )
+            _vm._v(_vm._s(this.matches ? this.matches + " results found " : ""))
           ]),
           _vm._v(" "),
           _c(
@@ -48327,7 +48373,7 @@ var render = function() {
                       _c(
                         "a",
                         {
-                          staticClass: " btn btn-outline-dark",
+                          staticClass: "btn btn-outline-dark",
                           attrs: { href: "#" },
                           on: {
                             click: function($event) {
@@ -48335,7 +48381,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v(" Add")]
+                        [_vm._v("Add")]
                       )
                     ])
                   ])
@@ -48369,7 +48415,11 @@ var render = function() {
                               staticStyle: { "padding-left": "0" }
                             },
                             [
-                              _vm._v(_vm._s(quest.name) + " "),
+                              _vm._v(
+                                "\n                " +
+                                  _vm._s(quest.name) +
+                                  "\n                "
+                              ),
                               _c("i", {
                                 staticClass: "fas fa-trash ml-1",
                                 on: {
@@ -48390,9 +48440,7 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    " " +
-                                      _vm._s(quest.price ? quest.price : 0) +
-                                      "M "
+                                    _vm._s(quest.price ? quest.price : 0) + "M"
                                   )
                                 ]
                               )
@@ -48412,11 +48460,7 @@ var render = function() {
                         [
                           _c("span", { staticClass: "mr-1" }, [
                             _vm._v(
-                              " " +
-                                _vm._s(
-                                  this.orderPrice ? "TOTAL PRICE : " : ""
-                                ) +
-                                " "
+                              _vm._s(this.orderPrice ? "TOTAL PRICE : " : "")
                             )
                           ]),
                           _vm._v(" "),
@@ -48430,10 +48474,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                " " +
-                                  _vm._s(
-                                    this.orderPrice ? this.orderPrice + "M" : ""
-                                  )
+                                _vm._s(
+                                  this.orderPrice ? this.orderPrice + "M" : ""
+                                )
                               )
                             ]
                           )
@@ -48451,7 +48494,12 @@ var render = function() {
                 "a",
                 {
                   staticClass: "btn btn-outline-dark float-right",
-                  staticStyle: { display: "block", "font-weight": "bold" }
+                  staticStyle: { display: "block", "font-weight": "bold" },
+                  on: {
+                    click: function($event) {
+                      _vm.sendOrderMsg()
+                    }
+                  }
                 },
                 [_vm._v("PLACE ORDER")]
               )
@@ -48488,7 +48536,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h4", { staticStyle: { "font-weight": "bold", margin: "0" } }, [
-        _vm._v("ORDER DETAILS ")
+        _vm._v("ORDER DETAILS")
       ])
     ])
   }
@@ -48504,6 +48552,637 @@ if (false) {
 
 /***/ }),
 /* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(47)
+/* template */
+var __vue_template__ = __webpack_require__(48)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Accounts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5c486e51", Component.options)
+  } else {
+    hotAPI.reload("data-v-5c486e51", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      accounts: []
+    };
+  },
+  created: function created() {
+    this.fetchAccounts();
+  },
+  methods: {
+    fetchAccounts: function fetchAccounts() {
+      var _this = this;
+
+      axios.get("/api/accounts").then(function (res) {
+        _this.accounts = res.data.data;
+      });
+    },
+    getAccount: function getAccount(id) {
+      window.location.href = '/accounts/' + id;
+    },
+    sendOrderMsg: function sendOrderMsg(account) {
+      tidioChatApi.messageFromVisitor("Hey, I want to order the following account: " + account.title + ' ' + 'for $' + account.price);
+    }
+  }
+});
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container ", staticStyle: { padding: "20px" } },
+    [
+      _c(
+        "div",
+        { staticClass: "row" },
+        _vm._l(_vm.accounts, function(account) {
+          return _c(
+            "div",
+            { key: account.id, staticClass: "col-lg-5 m-3 account-section" },
+            [
+              _vm._m(0, true),
+              _vm._v(" "),
+              _c("div", { staticClass: "account-info pt-2" }, [
+                _c(
+                  "span",
+                  { staticStyle: { display: "block", "font-weight": "bold" } },
+                  [_vm._v(_vm._s(account.title))]
+                ),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  { staticStyle: { display: "block", height: "50px" } },
+                  [_vm._v(_vm._s(account.information))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _c("label", { staticClass: "price" }, [
+                _vm._v("$" + _vm._s(account.price))
+              ]),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-dark float-right ml-2",
+                  staticStyle: {
+                    color: "white",
+                    padding: "4px !important",
+                    "font-size": "1em !important"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.sendOrderMsg(account)
+                    }
+                  }
+                },
+                [_vm._v(" Order")]
+              ),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "button float-right",
+                  staticStyle: {
+                    "font-weight": "400",
+                    padding: "4px !important",
+                    "font-size": "1em !important"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.getAccount(account.id)
+                    }
+                  }
+                },
+                [_vm._v(" Details")]
+              )
+            ]
+          )
+        })
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "img-section mr-3 float-left" }, [
+      _c("img", {
+        attrs: {
+          src:
+            "https://cdn.runescape.com/assets/img/external/support/template/icons/category-200977391.svg",
+          alt: ""
+        }
+      })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5c486e51", module.exports)
+  }
+}
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(50)
+/* template */
+var __vue_template__ = __webpack_require__(51)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/AccountDetail.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6c59f583", Component.options)
+  } else {
+    hotAPI.reload("data-v-6c59f583", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {};
+  },
+  props: ["account", "skills"],
+  created: function created() {
+    this.fetchAccount();
+  },
+  methods: {
+    fetchAccount: function fetchAccount() {
+      console.log(this.account);
+    },
+    sendOrderMsg: function sendOrderMsg() {
+      tidioChatApi.messageFromVisitor("Hey, I want to order the following account: " + this.account.title + ' ' + 'for $' + this.account.price);
+    }
+  }
+});
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "section" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-lg-5 mt-2 account-section" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "account-info pt-2" }, [
+            _c(
+              "span",
+              { staticStyle: { display: "block", "font-weight": "bold" } },
+              [_vm._v(_vm._s(_vm.account.title))]
+            ),
+            _vm._v(" "),
+            _c("span", { staticStyle: { display: "block", height: "50px" } }, [
+              _vm._v(_vm._s(_vm.account.information))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("label", { staticClass: "price" }, [
+            _vm._v("$" + _vm._s(_vm.account.price))
+          ]),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-dark float-right ml-2",
+              staticStyle: {
+                color: "white",
+                padding: "4px !important",
+                "font-size": "1em !important"
+              }
+            },
+            [_vm._v("Order")]
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "container account-details mt-5",
+        staticStyle: { padding: "30px" }
+      },
+      [
+        _c("h2", { staticStyle: { display: "block" } }, [_vm._v("Skills")]),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "row mb-3" },
+          _vm._l(_vm.skills, function(skill, key) {
+            return _c("div", { key: skill.id, staticClass: "col-md-1 p-1" }, [
+              _c("div", { staticClass: "skill-section" }, [
+                _c("div", { staticClass: "skill-img text-center" }, [
+                  _c("img", {
+                    staticClass: "mb-1",
+                    attrs: { src: "/images/skills/" + key + "-icon.png" }
+                  }),
+                  _vm._v(" "),
+                  _c("figcaption", [_vm._v(_vm._s(skill))])
+                ])
+              ])
+            ])
+          })
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "info-section mb-3" }, [
+          _c("h2", { staticStyle: { display: "block" } }, [
+            _vm._v("Information")
+          ]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v("\n      " + _vm._s(_vm.account.information) + "\n    ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "gallery-section mb-3" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-4 mb-2" }, [
+              _c("a", { staticClass: "pop", attrs: { href: "#" } }, [
+                _c("img", {
+                  staticStyle: { "min-height": "225px", width: "100%" },
+                  attrs: { src: _vm.account.skill_image }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4 mb-2" }, [
+              _c("a", { staticClass: "pop", attrs: { href: "#" } }, [
+                _c("img", {
+                  staticStyle: { "min-height": "250px", width: "100%" },
+                  attrs: { src: _vm.account.image_two }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4 mb-2" }, [
+              _c("a", { staticClass: "pop", attrs: { href: "#" } }, [
+                _c("img", {
+                  staticStyle: { "min-height": "250px", width: "100%" },
+                  attrs: { src: _vm.account.image_three }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(3)
+        ]),
+        _vm._v(" "),
+        _c("h2", {}, [_vm._v("Billing")]),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _c("div", { staticClass: "purchase mt-2" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-dark btn-lg",
+              staticStyle: { color: "white" },
+              on: {
+                click: function($event) {
+                  _vm.sendOrderMsg()
+                }
+              }
+            },
+            [_vm._v("Purchase account")]
+          )
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "container p-0 mb-3 mt-3" }, [
+      _c("a", { attrs: { href: "/accounts" } }, [
+        _c("i", {
+          staticClass: "fas fa-arrow-left",
+          staticStyle: { "font-size": "25px", color: "#09814A" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "img-section mr-3 float-left" }, [
+      _c("img", {
+        attrs: {
+          src:
+            "https://cdn.runescape.com/assets/img/external/support/template/icons/category-200977391.svg",
+          alt: ""
+        }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h2", { staticStyle: { display: "block" } }, [
+      _vm._v("Gallery\n        "),
+      _c("small", { staticStyle: { "font-size": "0.5em" } }, [
+        _vm._v("(click for large image)")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "imagemodal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-body" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "close",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("×")
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "sr-only" }, [_vm._v("Close")])
+                ]
+              ),
+              _vm._v(" "),
+              _c("img", {
+                staticClass: "imagepreview",
+                staticStyle: { height: "100%", width: "100%" },
+                attrs: { src: "" }
+              })
+            ])
+          ])
+        ])
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6c59f583", module.exports)
+  }
+}
+
+/***/ }),
+/* 52 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
