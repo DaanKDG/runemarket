@@ -48091,6 +48091,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {
     this.fetchQuests();
+    console.log(this.orderPrice);
   },
   watch: {
     keywords: function keywords(after, before) {
@@ -48130,7 +48131,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.order.push(_objectSpread({}, quest));
 
         if (quest.price) {
-          this.orderPrice += quest.price;
+          console.log(quest, quest.price);
+          this.orderPrice = +quest.price;
+          console.log('price:', this.orderPrice = +quest.price);
         }
       } else {
         console.log("element already selected");

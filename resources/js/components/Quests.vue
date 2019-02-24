@@ -122,6 +122,7 @@ export default {
   },
   mounted() {
     this.fetchQuests();
+    console.log(this.orderPrice);
   },
   watch: {
     keywords(after, before) {
@@ -158,7 +159,9 @@ export default {
       if (c == -1) {
         this.order.push({ ...quest });
         if (quest.price) {
-          this.orderPrice += quest.price;
+          console.log(quest, quest.price);
+          this.orderPrice =+ quest.price;
+          console.log('price:', this.orderPrice =+ quest.price )
         }
       } else {
         console.log("element already selected");
