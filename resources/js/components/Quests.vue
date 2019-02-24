@@ -109,7 +109,7 @@ export default {
         price: ""
       },
       order: [],
-      orderPrice: null,
+      orderPrice: 0,
       quest_id: "",
       pagination: {},
       edit: false,
