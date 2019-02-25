@@ -158,10 +158,9 @@ export default {
 
       if (c == -1) {
         this.order.push({ ...quest });
-        if (quest.price) {
-          console.log(quest, quest.price);
-          this.orderPrice =+ quest.price;
-          console.log('price:', this.orderPrice =+ quest.price )
+        if (quest.price > 0) {
+          this.orderPrice = this.orderPrice + quest.price;
+          console.log('price:', this.orderPrice )
         }
       } else {
         console.log("element already selected");
@@ -169,8 +168,8 @@ export default {
     },
     removeQuest(quest) {
       this.order.splice(this.order.indexOf(quest), 1);
-      if (quest.price) {
-        this.orderPrice -= quest.price;
+      if (quest.price > 0) {
+        this.orderPrice = this.orderPrice - quest.price;
       }
     },
     makePagination(meta, links) {

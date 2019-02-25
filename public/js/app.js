@@ -48130,10 +48130,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (c == -1) {
         this.order.push(_objectSpread({}, quest));
 
-        if (quest.price) {
-          console.log(quest, quest.price);
-          this.orderPrice = +quest.price;
-          console.log('price:', this.orderPrice = +quest.price);
+        if (quest.price > 0) {
+          this.orderPrice = this.orderPrice + quest.price;
+          console.log('price:', this.orderPrice);
         }
       } else {
         console.log("element already selected");
@@ -48142,8 +48141,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     removeQuest: function removeQuest(quest) {
       this.order.splice(this.order.indexOf(quest), 1);
 
-      if (quest.price) {
-        this.orderPrice -= quest.price;
+      if (quest.price > 0) {
+        this.orderPrice = this.orderPrice - quest.price;
       }
     },
     makePagination: function makePagination(meta, links) {

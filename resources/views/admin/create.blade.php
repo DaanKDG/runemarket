@@ -40,7 +40,7 @@
             <div class="skill-container mb-3">
                 @foreach ($skills as $skill)
                     <div class="skill-element" style='width: 175px; padding: 5px 0px; display:inline-block;'>
-                        {{Form::number('skill[' . $skill->skill_name . ']', '1',['class' => 'form-control skill-input mr-1 text-center', 'style' => 'display:inline-block;', 'placeholder' => '', 'min' => '1', 'max' => '999'])}}
+                        {{Form::number('skill[' . $skill->skill_name . ']', '1',['class' => 'form-control skill-input mr-1 text-center', 'style' => 'display:inline-block;', 'placeholder' => '', 'min' => '1', 'max' => '9999'])}}
                         <img style='display: inline-block; width: 20px; height: 20px;' class="mr-1" src="{{ asset('images/skills/' . $skill->skill_name . '-icon.png') }}" alt="skill-image">
                         {{Form::label($skill->skill_name, $skill->skill_name)}}
                     </div>
